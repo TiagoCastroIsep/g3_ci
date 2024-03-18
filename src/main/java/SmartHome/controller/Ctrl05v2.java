@@ -9,6 +9,7 @@ import SmartHome.dto.RoomMapper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This controller includes methods to retrieve existing rooms and add devices to specific rooms.
@@ -45,7 +46,7 @@ public class Ctrl05v2 {
 
         _roomsDTOAndRooms = RoomMapper.Domain2DTO(rooms);
 
-        return _roomsDTOAndRooms.keySet().stream().toList();
+        return _roomsDTOAndRooms.keySet().stream().collect(Collectors.toList());
     }
 
     /**

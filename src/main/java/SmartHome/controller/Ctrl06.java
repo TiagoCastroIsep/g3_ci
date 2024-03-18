@@ -10,6 +10,7 @@ import SmartHome.dto.RoomMapper;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Controller class for managing room and device-related operations.
@@ -43,7 +44,7 @@ public class Ctrl06 {
 
         _roomsDTOAndRooms = RoomMapper.Domain2DTO(rooms);
 
-        return _roomsDTOAndRooms.keySet().stream().toList();
+        return _roomsDTOAndRooms.keySet().stream().collect(Collectors.toList());
     }
 
 
@@ -61,6 +62,6 @@ public class Ctrl06 {
         List<Device> devices = room.getDevices();
         _devicesDTOAndDevices = DeviceMapper.Domain2DTO(devices);
 
-        return _devicesDTOAndDevices.keySet().stream().toList();
+        return _devicesDTOAndDevices.keySet().stream().collect(Collectors.toList());
     }
 }

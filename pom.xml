@@ -10,7 +10,7 @@
 
     <properties>
         <!-- Java Version Configuration -->
-        <java.version>17</java.version>
+        <java.version>11</java.version>
 
         <!-- Maven Version Configuration -->
         <maven-compiler-plugin>3.10.1</maven-compiler-plugin>
@@ -22,19 +22,19 @@
         <project.reporting.outputEncoding>${project.sourceEncoding}</project.reporting.outputEncoding>
 
         <!-- Junit Version Configuration -->
-        <junit-jupiter>5.10.2</junit-jupiter>
+        <junit-jupiter>5.9.2</junit-jupiter>
 
         <!-- Coverage configuration -->
-        <jacoco-maven-plugin>0.8.11</jacoco-maven-plugin>
+        <jacoco-maven-plugin>0.8.8</jacoco-maven-plugin>
 
         <!-- Pitest Version Configuration-->
-        <pitest-maven>1.15.8</pitest-maven>
+        <pitest-maven>1.11.0</pitest-maven>
         <pitest-junit5-plugin>1.1.2</pitest-junit5-plugin>
 
         <!-- Surefire Version Configuration -->
-        <maven-surefire-plugin>3.2.5</maven-surefire-plugin>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven-surefire-plugin>3.0.0-M9</maven-surefire-plugin>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
 
     </properties>
 
@@ -55,16 +55,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>5.10.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.10.0</version>
+            <version>3.2.4</version>
             <scope>test</scope>
         </dependency>
 
@@ -84,7 +77,12 @@
             <artifactId>commons-suncalc</artifactId>
             <version>3.5</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.10.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -95,7 +93,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin}</version>
                 <configuration>
-
                     <includes>
                         <include>**/Test*.java</include>
                         <include>**/*Test.java</include>

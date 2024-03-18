@@ -8,6 +8,7 @@ import SmartHome.dto.RoomMapper;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Controller class for managing room-related operations.
@@ -44,6 +45,6 @@ public class Ctrl03 {
 
         _roomsDTOAndRooms = RoomMapper.Domain2DTO(rooms);
 
-        return _roomsDTOAndRooms.keySet().stream().toList();
+        return _roomsDTOAndRooms.keySet().stream().collect(Collectors.toList());
     }
 }

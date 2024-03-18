@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static SmartHome.domain.constants.Constants.ACTUATOR_CONFIG;
 
@@ -51,7 +52,7 @@ public class Ctrl12 {
 
         _roomsDTOAndRooms = RoomMapper.Domain2DTO(rooms);
 
-        return _roomsDTOAndRooms.keySet().stream().toList();
+        return _roomsDTOAndRooms.keySet().stream().collect(Collectors.toList());
     }
     /**
      * Retrieves a list of devices in the specified room using the RoomDTO.
@@ -69,7 +70,7 @@ public class Ctrl12 {
         List<Device> devices = room.getDevices();
         _devicesDTOAndDevices = DeviceMapper.Domain2DTO(devices);
 
-        return _devicesDTOAndDevices.keySet().stream().toList();
+        return _devicesDTOAndDevices.keySet().stream().collect(Collectors.toList());
     }
 
     /**
