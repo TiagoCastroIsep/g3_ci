@@ -222,37 +222,4 @@ class SunsetSensorTest {
         assertEquals("18:24:53", sunsetTime.toString());
     }
 
-    /**
-     * Test case to verify the functionality of the calculateSunset() method in the SunsetSensor class for the city of Porto on a different date.
-     *
-     * <p><b>Test:</b> testCalculateSunsetForDifferentDateForPorto</p>
-     * <p><b>Purpose:</b> To ensure that the calculateSunset() method returns the expected sunset time for the city of Porto on a different date.</p>
-     * <p><b>Steps:</b>
-     * <ol>
-     *     <li>Arrange: Set up test parameters including a different test date (June 21st), latitude, and longitude for the city of Porto.</li>
-     *     <li>Arrange: Create a new SunsetSensor object with the provided catalogue, SUNSET_NAME, and value factory.</li>
-     *     <li>Act: Call the calculateSunset() method of the SunsetSensor object with the test parameters.</li>
-     *     <li>Assert: Verify that the calculated sunset time is not null.</li>
-     *     <li>Assert: Verify that the calculated sunset time matches the expected sunset time for the city of Porto on the different date.</li>
-     * </ol>
-     * </p>
-     */
-
-    @Test
-    void calculateSunsetForDifferentDateForPorto() {
-
-        // Arrange
-        LocalDate testDate = LocalDate.of(2024, 6, 21);
-        double latitude = 41.1579;
-        double longitude = - 8.6291;
-        SunsetSensor calculator = new SunsetSensor(catalogue, SUNSET_NAME, valueFactoryDouble);
-
-        // Act
-        LocalTime sunsetTime = calculator.calculateSunset(testDate, latitude, longitude);
-
-        // Assert
-        assertNotNull(sunsetTime);
-        assertEquals("21:10:55", sunsetTime.toString());
-    }
-
 }

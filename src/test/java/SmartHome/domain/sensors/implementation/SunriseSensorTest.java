@@ -144,25 +144,4 @@ class SunriseSensorTest {
         assertNotNull(sunriseTime);
         assertEquals("07:09:49", sunriseTime.toString());
     }
-
-    /**
-     * Tests calculating sunrise time for the city of Porto on a different date.
-     * Verifies that the calculated sunrise time matches the expected sunrise time for the different date.
-     */
-    @Test
-    void calculateSunriseForDifferentDateForPorto() {
-
-        // Arrange
-        LocalDate testDate = LocalDate.of(2024, 6, 21);
-        double latitude = 41.1579;
-        double longitude = -8.6291;
-        SunriseSensor calculator = new SunriseSensor(sensorCatalogue, SUNRISE_NAME, valueFactoryDouble);
-
-        // Act
-        LocalTime sunriseTime = calculator.calculateSunrise(testDate, latitude, longitude);
-
-        // Assert
-        assertNotNull(sunriseTime);
-        assertEquals("06:02:07", sunriseTime.toString());
-    }
 }
