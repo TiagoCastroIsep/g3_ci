@@ -1,0 +1,102 @@
+@startuml
+!theme toy
+
+package values{
+ interface Value {
+ toString() : String
+ setValue (measured : String) : boolean
+ getMeasurementUnit() : String
+ }
+  interface ValueFactory{
+  createRangeActuatorInt (lowerLimit : int, upperLimit : int) : Value
+  createRangeActuatorFractional (lowerLimit : double, upperLimit : double) : Value
+  createWValue () : WValue
+  createPercentage () : PercentageValue
+  createCelsiusTemperature () : CelsiusTemperatureValue
+  createWhvalue () : WhValue
+  createKmhCardinalValue () : KmhCardinalValue
+  createWm2Value () : Wm2Value
+  }
+}
+package actuator{
+class ActuatorRepository{
+- _repositoryActuators : List<String>;
+- _actuatorPath : String;
++ ActuatorRepository ( config : Configuration)
++ ActuatorRepository  (fileName : String)
+- isValidArgument (config : Configuration) : boolean
+- isValidArgument (fileName : String) : boolean
++ getActuatorPath () : String
++ findAllActuators() : List<String>
++ getActuatorModel (sensorModel : ActuatorModel) : String
+}
+class ActuatorFactory{
+- _actuatorRepository : ActuatorRepository;
+- _deviceRepository : DeviceRepository;
++ ActuatorFactory (actuatorRepository : ActuatorRepository)
++ addActuator (deviceName: DeviceName, actuatorModel : ActuatorModel, name : ActuatorName, valueFactory : ValueFactory) : Actuator
+}
+enum ActuatorFunctionality{
+    On_Off,
+    Range,
+    BlindRoller
+ }
+
+ interface Actuator <root> {
+ getName() : String
+ getActuatorFunctionality () : ActuatorFunctionality
+ }
+entity BlindRollerActuator{
+- _name : ActuatorName;
+- _deviceID : DeviceName;
+- _actuatorFuncionalitty : ActuatorFunctionality;
+- _currentValue : Value;
+- _valueFactory : ValueFactory;
+ ...
+}
+
+}
+package valueObject{
+class ActuatorName<VO>{
+- _name : String;
++ ActuatorName (name : String)
++ toString() : String
++ equals (obj : Object) : boolean
+}
+
+class ActuatorModel<VO>{
+- _model : String;
++ ActuatorModel (model : String)
++ toString() : String
++ equals (obj : Object) : boolean
+}
+class DeviceName <VO>{
+}
+}
+class DeviceRepository{
+...
++ deviceExists (deviceName : String) : boolean
+}
+
+
+
+
+
+ActuatorRepository "1" --> "1" ActuatorFactory
+ActuatorFactory "1" ..> "N" Actuator : uses
+Actuator "1" --> "1" ActuatorFunctionality : uses
+ActuatorFactory "1" --> "1" ActuatorName
+ActuatorFactory "1" --> "1" ActuatorModel
+ActuatorRepository "1" --> "1" ActuatorModel
+ActuatorFactory "1" .left.> "1" DeviceRepository : uses
+ActuatorFactory "1" --> "1" DeviceName : uses
+BlindRollerActuator "1" ..> "1" Actuator : implements
+ActuatorFactory "1" --> "1" BlindRollerActuator : creates
+BlindRollerActuator "1" ..> "1" ValueFactory : uses
+
+
+ValueFactory "1" ..> "1" Value : "uses"
+
+
+
+@enduml

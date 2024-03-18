@@ -1,0 +1,83 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+package controller{
+class Ctrl02{
+- _house : House
++ addRoomToHouse (roomDTO : RoomDTO) : boolean
+}
+}
+package domain{
+package house{
+class House {
+    - _location: Location
+    - _locationFactory: LocationFactory
+    - _roomFactory; RoomFactory
+    - _repository: Repository
+    + House(repository: Repository,\nlocationFactory: LocationFactory, roomFactory: RoomFactory)
+    + configureLocation(args): Location
+    + getLocation(): Location
+    + addRoom(name: String, houseFloor: String, \nheight: double, width: double, \ndeviceFactory : DeviceFactory, \ndimensionsFactory: DimensionsFactory): boolean
+    + roomExists(name: String): boolean
+    + getRooms(): List<Room>
+    + getRoom(name: String): Room
+    + getDevicesByRoomAndFunctionality( devicesByFuncionality:\nDevicesByFuncionality): Map <String, List<DeviceRoomDTO>>
+    + toString(): String
+}
+
+note right of House
+args: street: String, doorNumber: String,
+zip: String, city: String,
+country: String, latitude: double, longitude: double
+end note
+}
+package room{
+class RoomFactory{
+    + createRoom(name: String, houseFloor: String, \nheight: double, width: double, \nrepository: Repository, deviceFactory: DeviceFactory, \ndimensionsFactory: DimensionsFactory): Room
+}
+
+class Room {
+    - _name: String
+    - _houseFloor: String
+    - _dimensions: Dimensions
+    - _devices: List<Device>
+    - _repository: Repository
+    - _deviceFactory: DeviceFactory
+    - _dimensionsFactory: DimensionsFactory
+    + Room(name: String, houseFloor: String, \nheight: double, width: double, \nrepository: Repository, deviceFactory: DeviceFactory, \ndimensionsFactory: DimensionsFactory): Room
+    - validateArguments(name: String, houseFloor: String): boolean
+    + getName(): String
+    + getFloor(): String
+    + getDimensions(): Dimensions
+    + addDevice(name: String, model: String): boolean
+    - deviceExists(name: String): boolean
+    + getDevice(name: String): Device
+    + getDevices(): List<Device>
+    + toString(): String
+}
+
+class DimensionsFactory{
+    + createDimensions(height: double, width: double, length: double): Dimensions
+}
+class Dimensions {
+    - _height: double
+    - _width: double
+    - _length: double
+    + Dimensions(height: double, width: double, length: double)
+    - validateArguments(height: double, width: double, length: double)
+    + getHeight(): double
+    + getWidth(): double
+    + getLength(): double
+    + toString(): String
+}
+}
+Ctrl02 "1" ..> "1" House : "uses"
+House "1" *-right- "1" Room :"has"
+House "1"  ..> "0..*" RoomFactory : "uses"
+RoomFactory "1"  ..> "1" Room :"creates"
+Room "1"..>"1" DimensionsFactory : "uses""
+Room "1"  *-right-  "1" Dimensions: "has"
+DimensionsFactory "1" ..> "1" Dimensions :"creates"
+
+
+
+@enduml

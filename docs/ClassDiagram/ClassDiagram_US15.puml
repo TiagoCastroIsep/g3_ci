@@ -1,0 +1,87 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class House {
+    ...
+}
+
+class Room {
+    ...
+}
+
+class Device {
+    ...
+    + addActuator(actModel: String, name: String, \nactuatorCatalogue: ActuatorCatalogue, valueFactory: ValueFactory): Actuator
+}
+
+interface Actuator {
+    + getName(): String
+    + getActuatorFunctionality(): ActuatorFunctionality
+}
+
+class ActuatorCatalogue {
+    - _catalogueActuators: List<String>
+    - _actuatorFunctionalities: List<ActuatorFunctionality>
+    + ActuatorCatalogue(config: Configuration)
+    + ActuatorCatalogue(fileName: String)
+    - isValidConstructorArguments(config: Configuration): boolean
+    - isValidConstructorArguments(filePathname: String): boolean
+    + getActuatorModels(): List<ActuatorFunctionality>
+    + getActuatorFunctionality(functionality: ActuatorFunctionality): ActuatorFunctionality
+    + getActuator(actuatorModel: String, actuatorPath: String, \nname: String, valueFactory: ValueFactory): Actuator
+}
+
+interface ValueFactory {
+    createRangeActuatorInt(lowerLimit: int, upperLimit: int): Value
+    createRangeActuatorDecimal(lowerLimit: double, upperLimit: double): Value
+    createWValue(): Value
+    createPercentage(): Value
+    createCelsiusTemperature(): Value
+    createWhValue(): Value
+    createKmhCardinalValue(): Value
+    createWm2Value(): Value
+}
+
+class ValueFactoryImpl {
+    ...all methods from ValueFactory
+    + createRangeActuatorInt(lowerLimit: int, upperLimit: int): Value
+}
+
+class RangeActuatorIntValue {
+    - _lowerLimit: int
+    - _upperLimit: int
+    - _measurement: int
+    - _measurementUnits: String
+    + RangeActuatorIntValue(lowerLimit: int, upperLimit: int)
+    + toString(): String
+    + setValue(measured: String): boolean
+    + getMeasurementUnit(): String
+}
+
+class RangeActuatorInt {
+    - _actuatorFunctionality: ActuatorFunctionality
+    - _name: String
+    - _measurement: Value
+    - _lowerLimit: int
+    - _upperLimit: int
+    + RangeActuatorInt(actuatorCatalogue: ActuatorCatalogue, \nname: String, valueFactory: ValueFactory)
+    + configureActuator(name: String, lowerLimit: int, \nupperLimit: int, valueFactory: ValueFactory): boolean
+    + getName(): String
+    + getReading(): String
+    + getActuatorFunctionality(): ActuatorFunctionality
+    + getLowerLimit(): int
+    + getUpperLimit(): int
+    + setMeasurement(measured: String): boolean
+    + getMeasurementUnits(): String
+}
+
+House -> Room
+Room -> Device
+Device -down-> "<<contains list>>" Actuator
+RangeActuatorInt <--- "<<creates>>" ActuatorCatalogue
+RangeActuatorInt -up..|> Actuator
+RangeActuatorInt -left-> RangeActuatorIntValue
+RangeActuatorIntValue <-left- "<<creates>>" ValueFactoryImpl
+ValueFactoryImpl -down..|> ValueFactory
+
+@enduml

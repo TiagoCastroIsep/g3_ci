@@ -1,0 +1,68 @@
+@startuml
+!theme cerulean-outline
+
+skinparam backgroundColor #EEF2F7
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor #2471A3
+skinparam titleFontColor #2471A3
+skinparam sequenceArrowThickness 2
+skinparam defaultTextAlignment center
+skinparam sequenceParticipantBorderThickness 2
+skinparam sequenceParticipantFontColor #EEF2F7
+skinparam sequenceLifeLineBorderColor #2471A3
+skinparam sequenceLifeLineBorderThickness 1.5
+skinparam sequenceParticipantBackgroundColor #2471A3
+skinparam sequenceParticipantBorderColor #2471A3
+skinparam CollectionsBorderColor #000000
+skinparam CollectionsBackgroundColor #2471A3
+skinparam CollectionsFontColor #EEF2F7
+skinparam ArrowColor #2471A3
+skinparam ArrowThickness 2
+skinparam sequenceLifeLineBackgroundColor #D0D3D4
+
+title UC12 - Add a actuator to an existing device in a room
+
+
+participant ":Ctrl12" as C
+participant ":House" as H
+participant ":RoomMapper" as RM
+participant ":Room" as R
+participant ":DeviceMapper" as DM
+participant ":Device" as D
+participant ":ActuatorCatalog" as AC
+collections ":ActuatorFunctionality" as AF
+participant ":Sensor" as S
+ref over C, H, RM, R : UC3A: to List Rooms
+ref over C, H, RM, R, D: UC6A: to List Devices in Room
+
+
+C -> D : getActuatorFunctionalities(deviceDTO : DeviceDTO)
+activate D
+D -> AC : getActuatorFunctionalities()
+activate AC
+AC -> AF : getActuatorFunctionalities()
+activate AF
+AF --> AC : <font color="green"> actuatorFunctionalities : List<ActuatorFunctionality> </font>
+deactivate AF
+AC --> D : <font color="green"> actuatorFunctionalities : List<ActuatorFunctionality>  </font>
+deactivate AC
+D --> C : <font color="green"> actuatorFunctionalities : List<ActuatorFunctionality>  </font>
+deactivate D
+C -> D : addActuator (actuatorModel : String, name : String, \n_actuatorCatalogue: ActuatorCatalogue, valueFactoryImpl : ValueFactoryImpl)
+activate D
+D -> AC : getActuator (strModel : String, ACTUATOR_PATH, \nname: String, valueFactory: ValueFactory)
+activate AC
+AC-> AC : getActuator (actuatorModel : String, actuatorPath: String, \nname: String, valueFactory: ValueFactory)
+AC --> D : <font color="green"> actuator : Actuator
+deactivate AC
+D -> S :  actuatorExists(name : String) : boolean
+activate S
+S --> D : <font color="green"> getName (name) </font>
+deactivate S
+D --> C : <font color="green"> actuator: Actuator </font>
+deactivate D
+[o<-- C : <font color="green"> <True> </font>
+deactivate C
+
+@enduml

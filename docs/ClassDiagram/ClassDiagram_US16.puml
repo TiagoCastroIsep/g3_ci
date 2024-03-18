@@ -1,0 +1,89 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class House {
+    ...
+}
+
+class Room {
+    ...
+}
+
+class Device {
+    ...
+    + addActuator(actModel: String, name: String, \nactuatorCatalogue: ActuatorCatalogue, valueFactory: ValueFactory): Actuator
+}
+
+interface Actuator {
+    + getName(): String
+    + getActuatorFunctionality(): ActuatorFunctionality
+}
+
+class ActuatorCatalogue {
+    - _catalogueActuators: List<String>
+    - _actuatorFunctionalities: List<ActuatorFunctionality>
+    + ActuatorCatalogue(config: Configuration)
+    + ActuatorCatalogue(fileName: String)
+    - isValidConstructorArguments(config: Configuration): boolean
+    - isValidConstructorArguments(filePathname: String): boolean
+    + getActuatorModels(): List<ActuatorFunctionality>
+    + getActuatorFunctionality(functionality: ActuatorFunctionality): ActuatorFunctionality
+    + getActuator(actuatorModel: String, actuatorPath: String, \nname: String, valueFactory: ValueFactory): Actuator
+}
+
+interface ValueFactory {
+    createRangeActuatorInt(lowerLimit: int, upperLimit: int): Value
+    createRangeActuatorDecimal(lowerLimit: double, upperLimit: double): Value
+    createWValue(): Value
+    createPercentage(): Value
+    createCelsiusTemperature(): Value
+    createWhValue(): Value
+    createKmhCardinalValue(): Value
+    createWm2Value(): Value
+}
+
+class ValueFactoryImpl {
+    ...all methods from ValueFactory
+    + createRangeActuatorDecimal(lowerLimit: int, upperLimit: int): Value
+}
+
+class RangeActuatorDecimalValue {
+    - _lowerLimit: int
+    - _upperLimit: int
+    - _measurement: int
+    - _measurementUnits: String
+    + RangeActuatorIntValue(lowerLimit: int, upperLimit: int)
+    + toString(): String
+    + setValue(measured: String): boolean
+    + getMeasurementUnit(): String
+}
+
+class RangeActuatorDecimal {
+    - _actuatorFunctionality: ActuatorFunctionality
+    - _name: String
+    - _measurement: Value
+    - _lowerLimit: double
+    - _upperLimit: double
+    - _precision: double
+    + RangeActuatorInt(actuatorCatalogue: ActuatorCatalogue, \nname: String, valueFactory: ValueFactory)
+    + configureActuator(name: String, lowerLimit: double, \nupperLimit: double, valueFactory: ValueFactory): boolean
+    + getName(): String
+    + getReading(): String
+    + getActuatorFunctionality(): ActuatorFunctionality
+    + getLowerLimit(): int
+    + getUpperLimit(): int
+    + setMeasurement(measured: String): boolean
+    + getMeasurementUnits(): String
+    + getPrecision(): double
+}
+
+House -> Room
+Room -> Device
+Device -down-> "<<contains list>>" Actuator
+RangeActuatorDecimal <--- "<<creates>>" ActuatorCatalogue
+RangeActuatorDecimal -up..|> Actuator
+RangeActuatorDecimal -left-> RangeActuatorDecimalValue
+RangeActuatorDecimalValue <-left- "<<creates>>" ValueFactoryImpl
+ValueFactoryImpl -down..|> ValueFactory
+
+@enduml

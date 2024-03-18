@@ -1,0 +1,104 @@
+@startuml
+!theme toy
+
+package controller {
+    class Ctrl08 {
+        -_house: House
+        -_devicesDTOAndDevices: Map<DeviceDTO, Device>
+
+        +Ctrl08(house: House)
+        +getDevicesFromHouse(): Map<DeviceDTO, Device>
+        -getDeviceDto(name: String): DeviceDTO
+        +deactivate(deviceToDeactivate: DeviceDTO): boolean
+    }
+}
+
+package dto {
+    class DeviceDTO {
+        +name: String
+        +deviceModel: String
+        +isActive: boolean
+        +DeviceDTO(device: Device)
+    }
+
+    class DeviceMapper {
+        +Domain2DTO(device: Device): DeviceDTO
+        +Domain2DTO(devices: List<Device>): Map<DeviceDTO, Device>
+    }
+}
+
+package domain {
+package house{
+    class House {
+        -_location: Location
+        -_locationFactory: LocationFactory
+        -_roomFactory: RoomFactory
+        -_rooms: List<Room>
+
+        +House(locationFactory: LocationFactory, roomFactory: RoomFactory)
+        +configureLocation(street, doorNumber, zipCode, city, country, latitude, longitude): Location
+        +getLocation(): Location
+        +addRoom(name, houseFloor, height, width, length, deviceFactory, dimensionsFactory): boolean
+        -roomExists(name: String): boolean
+        +getRooms(): List<Room>
+        +getRoom(name: String): Room
+        +getDevicesByRoomAndFunctionality(DevicesByFunctionality): Map<String, List<DeviceRoomDTO>>
+    }
+    }
+package room{
+    class Room {
+        -_name: String
+        -_houseFloor: String
+        -_dimensions: Dimensions
+        -_devices: List<Device>
+        -_repository: Repository
+        -_deviceFactory: DeviceFactory
+        -_dimensionsFactory: DimensionsFactory
+        +Room(name, houseFloor, height, width, length, repository, deviceFactory, dimensionsFactory)
+        -validateArguments(name: String, houseFloor: String)
+        +getName(): String
+        +getFloor(): String
+        +getDimensions(): Dimensions
+        +addDevice(name: String, model: String): boolean
+        -deviceExists(name: String): boolean
+        +getDevice(name: String): Device
+        +getDevices(): List<Device>
+        +toString(): String
+    }
+package device{
+   class Device {
+        -_name: String
+        -_deviceModel: String
+        -_sensors: List<Sensor>
+        -_actuators: List<Actuator>
+        -_isActive: boolean
+        -_actuatorCatalogue: ActuatorCatalogue
+        -_sensorCatalogue: SensorCatalogue
+        +Device(name: String, deviceModel: String)
+        -validateArguments(name: String, deviceModel: String)
+        +switchDevice(isActive: boolean): boolean
+        +getName(): String
+        +getIsActive(): boolean
+        +getDeviceModel(): String
+        +getSensor(name: String): Sensor
+        +getActuator(name: String): Actuator
+        +addSensor(strModel, name, sensorCatalogue, valueFactory): Sensor
+        +addActuator(actModel, name, actuatorCatalogue, valueFactory): Actuator
+        +getSensors(): List<Sensor>
+        +getActuators(): List<Actuator>
+        +sensorExists(name: String): boolean
+        +actuatorExists(name: String): boolean
+        +getSensorFunctionalities(): List<SensorFunctionality>
+        +getActuatorFunctionalities(): List<ActuatorFunctionality>
+    }
+}
+}
+Ctrl08 .down.> House: uses
+Ctrl08 .right.> DeviceDTO: uses
+Ctrl08 .down.> DeviceMapper: uses
+DeviceMapper .down.> DeviceDTO: uses
+House -down-* Room: 1..*: has
+Room -right-* Device: 1..*: has
+
+
+@enduml

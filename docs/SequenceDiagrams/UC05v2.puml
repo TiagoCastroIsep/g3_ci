@@ -1,0 +1,85 @@
+@startuml
+
+!theme cerulean
+skinparam backgroundColor #EEF2F7
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor #2471A3
+skinparam titleFontColor #2471A3
+skinparam sequenceArrowThickness 2
+skinparam defaultTextAlignment center
+skinparam sequenceParticipantBorderThickness 2
+skinparam sequenceParticipantFontColor white
+skinparam sequenceLifeLineBorderColor #2471A3
+skinparam sequenceLifeLineBorderThickness 1.5
+skinparam sequenceParticipantBackgroundColor #2471A3
+skinparam sequenceParticipantBorderColor #2471A3
+skinparam ArrowColor #2471A3
+skinparam ArrowThickness 2
+skinparam sequenceLifeLineBackgroundColor #D0D3D4
+
+participant ":Ctrl05" as Ctrl05
+participant ":ServiceDevice" as ServiceDevice
+participant ":DeviceRepository" as DeviceRepository
+participant ":FactoryDevice" as FactoryDevice
+participant ":RoomName" as RoomName
+participant ":DeviceName" as DeviceName
+participant ":DeviceModel" as DeviceModel
+participant "device:Device" as Device
+
+title UC05v2
+
+ref over Ctrl05 : UC3A: to List Rooms
+
+[o-> Ctrl05: createDevice(roomDTO: RoomDTO, deviceDTO: DeviceDTO)
+activate Ctrl05
+Ctrl05 -> ServiceDevice: createDevice(roomDTO: RoomDTO, deviceDTO: DeviceDTO)
+activate ServiceDevice
+
+' creating DeviceName and DeviceModel objects inside the factory class
+ServiceDevice -> FactoryDevice: createDevice(roomName RoomName, deviceName : DeviceName, deviceModel : DeviceModel)
+activate FactoryDevice
+FactoryDevice -> RoomName** :RoomName: RoomName(roomName: String)
+activate RoomName
+RoomName --> FactoryDevice: RoomName
+deactivate RoomName
+
+FactoryDevice -> DeviceName**: DeviceName(deviceName: String)
+activate DeviceName
+DeviceName --> FactoryDevice: DeviceName
+deactivate DeviceName
+
+FactoryDevice -> DeviceModel**: DeviceModel(deviceModel: String)
+activate DeviceModel
+DeviceModel --> FactoryDevice: DeviceModel
+deactivate DeviceModel
+
+FactoryDevice -> Device**: Device(roomName RoomName, deviceName : DeviceName, deviceModel : DeviceModel)
+activate Device
+Device --> FactoryDevice: device
+deactivate Device
+FactoryDevice --> ServiceDevice: device
+deactivate FactoryDevice
+'ServiceDevice -> ServiceDevice: validaDevice(device Device)
+ServiceDevice --> Ctrl05: device
+deactivate ServiceDevice
+[o<-- Ctrl05 : device
+
+[o-> Ctrl05: addDevice(device: Device)
+Ctrl05 -> ServiceDevice: addDevice(device: Device)
+activate ServiceDevice
+ServiceDevice -> DeviceRepository: findAll()
+activate DeviceRepository
+DeviceRepository --> ServiceDevice: List<Device>
+deactivate DeviceRepository
+ServiceDevice -> ServiceDevice: verifyDuplicates(devices: List<Device>, device: Device)
+ServiceDevice -> DeviceRepository: save(device: Device)
+activate DeviceRepository
+DeviceRepository --> ServiceDevice: Device
+deactivate DeviceRepository
+ServiceDevice --> Ctrl05: true
+deactivate ServiceDevice
+[o<-- Ctrl05 : true
+deactivate Ctrl05
+
+@enduml

@@ -1,0 +1,101 @@
+@startuml
+!theme toy
+
+class HouseID <VO> {
+- _id: UUID;
++ HouseID(id: UUID): void;
++ generate(): HouseID;
++ getID(): UUID;
+}
+
+class House_WithID <root> {
+-  _houseID: HouseID;
+- _location: Location;
+- _rooms = new ArrayList<>(): List<Room> ;
++ House(houseID: HouseID, location: Location): void;
++ getHouseID(): HouseID;
++ findLocation(): Location;
++ findAllRooms(): List<Room>;
++ addRoom(room: Room): void;
+}
+
+
+package house{
+
+    class HouseName <VO> {
+    - _name: String;
+    + HouseName(name: String): void;
+    - validateArguments(name: String): boolean;
+    + getName(): String;
+    }
+
+    class House <root> {
+    - _houseName: HouseName;
+    - _location: Location;
+    - _rooms = new ArrayList<>(): List<Room> ;
+    + House(houseName: HouseName, location: Location): void;
+    + findHouseName(): HouseName;
+    + findLocation(): Location;
+    + findAllRooms(): List<Room>;
+    + addRoom(room: Room): void;
+    }
+
+    class Location <Entity> {
+    - _address: Address;
+    - _gps: GPS;
+    + Location(address: Address, gps: GPS): void;
+    + getAddress(): Address;
+    + getGPS(): GPS;
+    }
+}
+
+package valueObject {
+    class HouseRepository <VO> {
+    - _houses = new ArrayList<>(): List<House>;
+    + addHouse(house: House): void;
+    + removeHouse(houseName: HouseName): void;
+    + findHouseByID(houseName: HouseName): House;
+    + findAllHouses(): List<House>;
+    }
+
+    class Address <VO> {
+    - _street: String;
+    - _doorNumber: String;
+    - _zip: String;
+    - _city: String;
+    - _country: String;
+    + Address(street: String, doorNumber: String, zip: String, city: String, country: String): void;
+    - validateArguments(street: String, doorNumber: String, zip: String, city: String, country: String): boolean;
+    + configureAddress(street: String, doorNumber: String, zip: String, city: String, country: String): boolean;
+    + equals(address: Address): boolean;
+    + toString(): String;
+    }
+
+    class GPS <VO> {
+    - _latitude: double;
+    - _longitude: double;
+    + GPS(latitude: double, longitude: double): void;
+    - validateArguments(latitude: double, longitude: double): boolean;
+    + configureGPS(latitude: double, longitude: double): boolean;
+    + equals(gps: GPS): boolean;
+    + toString(): String;
+    }
+
+    class LocationFactory <VO> {
+    + createLocation(address: Address, gps: GPS): Location;
+    }
+
+}
+
+House "1" -- "1" HouseName : contains
+House "1" -- "1" Location : contains
+House "1" -- "*" Room : contains
+
+LocationFactory .down.> Location : creates
+Location .down.> Address : contains
+Location .down.> GPS : contains
+HouseRepository .down.> House : manages
+
+
+
+@enduml

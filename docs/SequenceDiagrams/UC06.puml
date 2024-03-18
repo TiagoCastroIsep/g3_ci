@@ -1,0 +1,56 @@
+@startuml
+!theme cerulean-outline
+
+skinparam backgroundColor #EEF2F7
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor #2471A3
+skinparam titleFontColor #2471A3
+skinparam sequenceArrowThickness 2
+skinparam defaultTextAlignment center
+skinparam sequenceParticipantBorderThickness 2
+skinparam sequenceParticipantFontColor #EEF2F7
+skinparam sequenceLifeLineBorderColor #2471A3
+skinparam sequenceLifeLineBorderThickness 1.5
+skinparam sequenceParticipantBackgroundColor #2471A3
+skinparam sequenceParticipantBorderColor #2471A3
+skinparam ArrowColor #2471A3
+skinparam ArrowThickness 2
+skinparam sequenceLifeLineBackgroundColor #D0D3D4
+
+title UC06 - List devices in room
+ref over ":Ctrl06",":House", ":RoomMapper" : UC3A: to List Rooms
+'activate ":Ctrl06"
+'[o-> ":Ctrl06" : getExistingRooms()
+
+'":Ctrl06" -> ":House" : getRooms()
+'activate ":House"
+'":House" --> ":Ctrl06": <font color="green"> List<Rooms></font>
+'deactivate ":House"
+'":Ctrl06" -> ":RoomMapper" : domainToDTO(rooms)
+'activate ":RoomMapper"
+'":RoomMapper" -> ":RoomMapper" : domainToDTO(rooms)
+'":RoomMapper" --> ":Ctrl06": <font color="green"> Map<RoomDTO, Room></font>
+'deactivate ":RoomMapper"
+'[o<-- ":Ctrl06": <font color="green"> List<RoomDTO></font>
+'deactivate ":Ctrl06"
+
+
+[o-> ":Ctrl06" : getDevicesInRoom(roomDTO)
+activate ":Ctrl06"
+":Ctrl06" -> ":Room" : getDevices()
+activate ":Room"
+":Room" --> ":Ctrl06": <font color="green"> List<Devices></font>
+deactivate ":Room"
+":Ctrl06" -> ":DeviceMapper" : DomainToDTO(List<Device>)
+activate ":DeviceMapper"
+loop
+":DeviceMapper" -> ":DeviceMapper" : DomainToDTO(Device)
+end
+":DeviceMapper" --> ":Ctrl06": <font color="green"> Map<DeviceDTO, Device></font>
+deactivate ":DeviceMapper"
+[o<-- ":Ctrl06": <font color="green"> List<DeviceDTO></font>
+deactivate ":Ctrl06"
+
+
+@enduml

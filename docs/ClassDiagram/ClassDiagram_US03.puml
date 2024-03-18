@@ -1,0 +1,71 @@
+@startuml
+
+package controller{
+class Ctrl03 {
+- _house : House
+- _roomsDTOandRooms : Map<String, RoomDTO>
++ Ctrl03(house: House)
++ getExistingRooms() : List<RoomDTO>
+}
+}
+package domain{
+package house{
+class House {
+    - _location: Location
+    - _locationFactory: LocationFactory
+    - _roomFactory; RoomFactory
+    - _repository: Repository
+    + House(repository: Repository,\nlocationFactory: LocationFactory, roomFactory: RoomFactory)
+    + configureLocation(street: String, doorNumber: String, \nzip: String, city: String,country: String, \nlatitude: double, longitude: double): Location
+    + getLocation(): Location
+    + addRoom(name: String, houseFloor: String, \nheight: double, width: double, \ndeviceFactory : DeviceFactory, \ndimensionsFactory: DimensionsFactory): boolean
+    + roomExists(name: String): boolean
+    + getRooms(): List<Room>
+    + getRoom(name: String): Room
+    + getDevicesByRoomAndFunctionality( devicesByFunctionality:\nDevicesByFunctionality): Map <String, List<DeviceRoomDTO>>
+}
+}
+package room{
+class Room {
+    - _name: String
+    - _houseFloor: String
+    - _dimensions: Dimensions
+    - _devices: List<Device>
+    - _repository: Repository
+    - _deviceFactory: DeviceFactory
+    - _dimensionsFactory: DimensionsFactory
+    + Room(name: String, houseFloor: String, \nheight: double, width: double, \nrepository: Repository, deviceFactory: DeviceFactory, \ndimensionsFactory: DimensionsFactory): Room
+    - validateArguments(name: String, houseFloor: String): boolean
+    + getName(): String
+    + getFloor(): String
+    + getDimensions(): Dimensions
+    + addDevice(name: String, model: String): boolean
+    - deviceExists(name: String): boolean
+    + getDevice(name: String): Device
+    + getDevices(): List<Device>
+    + toString(): String
+}
+
+class RoomMapper{
++ Domain2DTO (room: Room) : RoomDTO
++ Domain2DTO (rooms: List<Room>) : Map<RoomDTO, room>
+}
+
+class RoomDTO{
++ name : String
++ floor : String
++ length : double
++ width : double
++ height : double
++ RoomDTO ( room : Room, dimensions : Dimensions)
++ toString() : String
+}
+}
+Ctrl03 "1" ..down> "1" House : "uses"
+House "1" --down> "N" Room : "has"
+House "1" ..right> "1" RoomMapper : "uses"
+RoomMapper "1" .. "N" Room : "uses"
+RoomMapper "1" ..> "N" RoomDTO : "uses"
+
+
+@enduml

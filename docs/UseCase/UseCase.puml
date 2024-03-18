@@ -1,0 +1,64 @@
+@startuml
+!theme mars
+skinparam actorStyle awesome
+skinparam backgroundColor white
+
+'left to right direction
+  actor Administrator
+  actor PowerUser
+  actor RoomOwner
+
+package "Smart Home" {
+  usecase "UC01 - To Configure the House location" as UC01
+  usecase "UC02A - To Add and Configure Rooms" as UC02A
+  usecase "UC03A - To List Rooms" as UC03A
+  usecase "UC03B - To Edit Rooms" as UC03B
+  usecase "UC04A - To Define a Sensor Type" as UC04A
+  usecase "UC04B - To List Sensor Types" as UC04B
+
+  usecase "UC05v2A - To Add a new Device" as UC05v2A
+  usecase "UC05v2B - To Configure a new Device" as UC05v2B
+  usecase "UC06A - To Get Device List in Room" as UC06A
+  usecase "UC06B - To Configure existing Device" as UC06B
+  usecase "UC07A - To Add a Sensor to Device" as UC07A
+  usecase "UC08A - To Deactivate Device" as UC08A
+  usecase "UC08B - To Get Logs" as UC08B
+  usecase "UC08C - To Get Configuration" as UC08C
+  usecase "UC09A - To Get Device List in a House" as UC09A
+  usecase "UC09B - To List by Functionality" as UC09B
+
+  usecase "UC12A - To Add a Actuator to Device" as UC12A
+  usecase "UC12B - Type of Actuator" as UC12B
+
+  Administrator --> UC01
+  Administrator --> UC02A
+  Administrator --> UC04A
+
+  RoomOwner --> UC06B
+  PowerUser --> UC05v2A
+  PowerUser --> UC06A
+  PowerUser --> UC07A
+  PowerUser --> UC08A
+  PowerUser --> UC09A
+  PowerUser --> UC12A
+
+  UC01 ..> UC03A: <includes>
+  UC03A <.. UC03B: <includes>
+  UC02A ..> UC03B: <includes>
+  UC04A ..> UC04B: <includes>
+  UC03A <.. UC06A: <includes>
+  UC03A <.up. UC05v2A: <includes>
+
+  UC05v2A ..> UC05v2B: <includes>
+  UC06A <.. UC09A: <includes>
+  UC09A <.. UC08A: <includes>
+  UC06A <.. UC06B: <includes>
+  UC07A .up.> UC04B: <includes>
+  UC06A <.. UC08C: <includes>
+  UC06A <.. UC08B: <includes>
+  UC09A ..> UC09B: <includes>
+  UC07A .right.> UC06A: <includes>
+  UC12A .down.> UC06A: <includes>
+  UC12A .right.> UC12B: <includes>
+}
+@enduml

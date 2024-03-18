@@ -1,0 +1,44 @@
+@startuml
+!theme cerulean-outline
+
+skinparam backgroundColor #EEF2F7
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor #2471A3
+skinparam titleFontColor #2471A3
+skinparam sequenceArrowThickness 2
+skinparam defaultTextAlignment center
+skinparam sequenceParticipantBorderThickness 2
+skinparam sequenceParticipantFontColor #EEF2F7
+skinparam sequenceLifeLineBorderColor #2471A3
+skinparam sequenceLifeLineBorderThickness 1.5
+skinparam sequenceParticipantBackgroundColor #2471A3
+skinparam sequenceParticipantBorderColor #2471A3
+skinparam ArrowColor #2471A3
+skinparam ArrowThickness 2
+skinparam sequenceLifeLineBackgroundColor #D0D3D4
+
+title UC03 - List Rooms to edit
+
+participant ":Ctrl12" as C
+participant ":House" as H
+participant ":RoomMapper" as RM
+
+
+[o-> C :getExistingRooms()
+activate C
+C -> H : getRooms();
+activate H
+H --> C :  <font color="green"> rooms : List<Room> </font>
+deactivate H
+C ->RM : Domain2DTO(rooms)
+activate RM
+RM -> RM :  Domain2DTO
+RM --> C : <font color="green">roomsDTOandRooms : Map<RoomDTO, Room> </font>
+deactivate RM
+C -> C :  roomsDTOandRooms : List<RoomDTO>
+
+
+
+
+@enduml
